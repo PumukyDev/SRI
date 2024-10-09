@@ -1,0 +1,38 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box_check_update = false
+  config.vbguest.auto_update = false
+  config.ssh.insert_key = false
+  
+  
+  config.vm.define "server" do |s|
+    s.vm.box = "debian/bookworm64"
+    s.vm.network "private_network", ip: "192.168.56.10"
+    s.vm.network "private_network", ip: "192.168.57.10", virtualbox__intnet: true 
+    s.vm.provision "shell", inline: <<-SHELL
+        apt-get update
+        apt-get install -y isc-dhcp-server
+        cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.bak
+        cp -v /vagrant/shared/dhcp_settings/interfaces.config  /etc/default/isc-dhcp-server
+        cp -v /vagrant/shared/dhcp_settings/dhcpd.config  /etc/dhcp/dhcpd.conf
+        systemctl start isc-dhcp-server
+      SHELL
+  end
+
+
+  config.vm.define "c1" do |s|
+    s.vm.box = "debian/bookworm64"
+    s.vm.network "private_network", type:"dhcp", virtualbox__intnet: true 
+  end
+
+  config.vm.define "c2" do |c|
+    c.vm.box = "debian/bookworm64"
+    c.vm.network "private_network", type:"dhcp", virtualbox__intnet: true
+  end
+
+
+        #auto_config: false, lo usamos en el cliente para comfigurar nosotros la tarjeta de red
+
+end
