@@ -1,0 +1,24 @@
+@startuml
+!include <office/Servers/application_server>
+!include <office/Servers/database_server>
+
+!include <office/Servers/application_server>
+!include <osa/desktop/desktop>
+
+
+nwdiag {
+  network private {
+      address = "192.168.56.0/24"
+
+      server [address = "192.168.56.10",  description = "<$application_server>\n server"];];
+  }
+  network internal {
+      address = "192.168.57.0/24";
+
+      server [address = "192.168.57.10"];
+
+      c1 [address = "192.168.57.x",  description = "<$desktop>\n c1"];
+      c2 [address = "192.168.57.x",  description = "<$desktop>\n c2"];
+  }
+}
+@enduml

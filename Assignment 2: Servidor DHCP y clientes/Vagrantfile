@@ -15,24 +15,23 @@ Vagrant.configure("2") do |config|
         apt-get update
         apt-get install -y isc-dhcp-server
         cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.bak
-        cp -v /vagrant/shared/dhcp_settings/interfaces.config  /etc/default/isc-dhcp-server
-        cp -v /vagrant/shared/dhcp_settings/dhcpd.config  /etc/dhcp/dhcpd.conf
-        systemctl start isc-dhcp-server
+        cp /vagrant/shared/dhcp_settings/interfaces.config  /etc/default/isc-dhcp-server
+        cp /vagrant/shared/dhcp_settings/dhcpd.config  /etc/dhcp/dhcpd.conf
+        systemctl restart isc-dhcp-server
       SHELL
-  end
+  end #Server
 
 
-  config.vm.define "c1" do |s|
-    s.vm.box = "debian/bookworm64"
-    s.vm.network "private_network", type:"dhcp", virtualbox__intnet: true 
-  end
+  config.vm.define "client2" do |c1|
+    c1.vm.box = "debian/bookworm64"
+    c1.vm.network "private_network", mac: "5CA1AB1E0001", auto_config: false, virtualbox__intnet: true 
+    c1.vm.provision "shell", inline: "dhclient eth1"
+  end #Client1
 
-  config.vm.define "c2" do |c|
-    c.vm.box = "debian/bookworm64"
-    c.vm.network "private_network", type:"dhcp", virtualbox__intnet: true
-  end
-
-
-        #auto_config: false, lo usamos en el cliente para comfigurar nosotros la tarjeta de red
+  config.vm.define "client1" do |c2|
+    c2.vm.box = "debian/bookworm64"
+    c2.vm.network "private_network", mac: "5CA1AB1E0002", auto_config: false, virtualbox__intnet: true
+    c2.vm.provision "shell", inline: "dhclient eth1"
+  end #Client2
 
 end
