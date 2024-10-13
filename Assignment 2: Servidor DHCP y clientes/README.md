@@ -41,5 +41,5 @@ This project sets up a DHCP server on a Linux machine, configuring two virtual c
 
 To start the virtual machine, simply navigate to the project directory and run the following command:
     
-    -vagrant up
+    vagrant up
 
