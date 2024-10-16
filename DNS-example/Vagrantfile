@@ -12,6 +12,9 @@ Vagrant.configure("2") do |config|
     SHELL
     master.vm.provision "shell", name: "master-dns" ,inline: <<-SHELL
       cp -v /vagrant/named /etc/default/
+      cp -v /vagrant/named.conf.options /etc/bind
+      cp -v /vagrant/named.conf.local /etc/bind
+      cp -v /vagrant/sri.dns /var/lib/bind
       systemctl restart named
     SHELL
   end

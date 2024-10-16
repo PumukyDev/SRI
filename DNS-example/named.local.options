@@ -1,0 +1,30 @@
+acl localnet {
+	192.168.57.0/24;
+};
+
+acl "trusted"{
+	localnet;
+};
+
+options {
+	directory "/var/cache/bind";
+
+    
+	allow-recursion {
+    	trusted;
+	};
+
+ 	forwarders {
+     	8.8.8.8;
+ 	};
+
+	//========================================================================
+	// If BIND logs error messages about the root key being expired,
+	// you will need to update your keys.  See https://www.isc.org/bind-keys
+	//========================================================================
+	dnssec-validation no;
+
+	listen-on-v6 { any; };
+};
+
+
