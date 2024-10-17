@@ -9,5 +9,6 @@
 zone "sri.test"{
 	type master;
 	file "/var/lib/bind/sri.dns";
+	allow-transfer { 192.168.57.11 } // Se debe usar en la redlaidad para evitar que otros saquen todas las ip de la red (por algo del esclavo, mirar)
 };
 

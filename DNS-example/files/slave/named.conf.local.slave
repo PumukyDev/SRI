@@ -7,7 +7,6 @@
 //include "/etc/bind/zones.rfc1918";
 
 zone "sri.test"{
-	type master;
-	file "/var/lib/bind/sri.dns";
-};
-
+	type slave;
+	masters { 192.168.57.10; };
+}
