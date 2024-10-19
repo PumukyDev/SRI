@@ -12,21 +12,28 @@ Vagrant.configure("2") do |config|
       apt-get upgrade -y
       apt-get install -y bind9 bind9utils bind9-doc
       cp -v /vagrant/named /etc/default/
-      cp -v /vagrant/sistema.test.dns /var/lib/bind/
-      cp -v /vagrant/sistema.test.rev /var/lib/bind/
+      cp -v /vagrant/named.conf.options /etc/bind/
     SHELL
 
   config.vm.define "master" do |m|
+    m.vm.hostname = "tierra"
     m.vm.network "private_network", ip: "192.168.57.103"
     m.vm.provision "shell", inline: <<-SHELL
-      cp -v /vagrant/named.conf.options /etc/bind/
       cp -v /vagrant/files/master/named.conf.local /etc/bind/
+      cp -v /vagrant/sistema.test.dns /var/lib/bind/
+      cp -v /vagrant/sistema.test.rev /var/lib/bind/
+      chown bind:bind /var/lib/bind/*
+      systemctl restart named
     SHELL
   end
 
   config.vm.define "slave" do |s|
+    s.vm.hostname = "venus"
     s.vm.network "private_network", ip: "192.168.57.102"
-    s.vm.provision "shell", inline: "cp -v /vagrant/files/slave/named.conf.local /etc/bind/"
+    s.vm.provision "shell", inline: <<-SHELL
+      "cp -v /vagrant/files/slave/named.conf.local /etc/bind/"
+      systemctl restart named
+    SHELL
   end
 
 end

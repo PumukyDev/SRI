@@ -3,16 +3,18 @@
 ;
 
 $TTL	86400
-$ORIGIN sistema.test.
+$ORIGIN 57.168.192.in-addr.arpa.
 
-@	IN	SOA	master root.sistema.test. (
-            2024101901	; Serial
+@	IN	SOA	tierra.sistema.test. root.sistema.test. (
+            2024101902	; Serial
             604800		; Refresh
             86400		; Retry
             2419200		; Expire
             7200 )	    ; Negative Cache TTL
 ;
-@               IN      NS      tierra
-@               IN      NS      venus
-103     IN      PTR     tierra
-102     IN      PTR     venus
+@               IN      NS      tierra.sistema.test.
+@               IN      NS      venus.sistema.test.
+103     IN      PTR     tierra.sistema.test.
+102     IN      PTR     venus.sistema.test.
+104     IN      PTR     marte.sistema.test.
+101     IN      PTR     mercurio.sistema.test.
