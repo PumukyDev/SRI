@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
       apt-get update -y
       apt-get upgrade -y
-      apt-get install -y bind9 dnsutils
+      apt-get install -y bind9 bind9utils bind9-doc
       cp -v /vagrant/named /etc/default/
     SHELL
 
