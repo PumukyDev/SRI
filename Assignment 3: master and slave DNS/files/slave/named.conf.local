@@ -1,0 +1,19 @@
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+zone "sistema.test" {
+    type slave;
+    file "/var/lib/bind/sistema.test.dns";  //Direct zone file (name --> IP)
+    masters { 192.168.57.103; };
+};
+
+zone "57.168.192.in-addr.arpa" {
+    type slave;
+    file "/var/lib/bind/sistema.test.rev";  //Reverse zone file (IP --> name)
+    masters { 192.168.57.103; };
+};
