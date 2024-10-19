@@ -1,0 +1,18 @@
+;
+;
+;
+
+$TTL	86400
+$ORIGIN sistema.test.
+
+@	IN	SOA	master root.sistema.test. (
+            2024101901	; Serial
+            604800		; Refresh
+            86400		; Retry
+            2419200		; Expire
+            7200 )	    ; Negative Cache TTL
+;
+@               IN      NS      tierra
+@               IN      NS      venus
+103     IN      PTR     tierra
+102     IN      PTR     venus
