@@ -6,7 +6,7 @@ $TTL	86400
 $ORIGIN sistema.test.
 
 @	IN	SOA	master root.sistema.test. (
-            2024101901	; Serial
+            2024101902	; Serial
             604800		; Refresh
             86400		; Retry
             2419200		; Expire
@@ -16,6 +16,8 @@ $ORIGIN sistema.test.
 @               IN      NS      venus
 tierra          IN      A       192.168.57.103
 venus           IN      A       192.168.57.102
+marte           IN      A       192.168.57.104   ; 
 ns1             IN      CNAME   tierra
 ns2             IN      CNAME   venus
 mail            IN      CNAME   marte
+@               IN      MX      10 marte
