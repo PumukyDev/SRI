@@ -1,5 +1,23 @@
+acl "localhost" {
+    127.0.0.0/8;     // Loopback network
+};
+
+acl "localnet" {
+    192.168.57.0/24; // Local network
+};
+
+acl "trusted" {
+    localhost;
+    localnet;
+};
+
 options {
         directory "/var/cache/bind";
+
+        recursion yes;
+        allow-recursion {
+                trusted;      // Allow recursive queries only from trusted ACLs
+        };
 
         // If there is a firewall between you and nameservers you want
         // to talk to, you may need to fix the firewall to allow multiple
