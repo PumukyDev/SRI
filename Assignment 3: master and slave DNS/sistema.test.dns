@@ -16,3 +16,6 @@ $ORIGIN sistema.test.
 @               IN      NS      venus
 tierra          IN      A       192.168.57.103
 venus           IN      A       192.168.57.102
+ns1             IN      CNAME   tierra
+ns2             IN      CNAME   venus
+mail            IN      CNAME   marte
