@@ -38,7 +38,8 @@ options {
         //========================================================================
 
         dnssec-validation yes;
-                
+
+        max-ncache-ttl 7200; 
 
         // listen-on-v6 { any; };
 };
