@@ -32,7 +32,10 @@ options {
                 208.67.222.222;   // OpenDNS server
          };
 
-        listen-on port 53 { 192.168.57.103; };
+        listen-on port 53 {
+            192.168.57.103;     // Master - tierra
+            192.168.57.102;     // Slave  - venus
+        };
 
         //========================================================================
         // If BIND logs error messages about the root key being expired,
