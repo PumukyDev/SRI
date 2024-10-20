@@ -276,6 +276,80 @@ For the slave server configuration, we'll use the following setup:
 
 This ensures that the slave server (venus) is properly configured with its respective named.conf.local file and that the named service is restarted.
 
+## :wrench: Checks
+
+Verify that the master server can resolve type A records
+<div align="center">
+    <img src="images/checks/direct_dns_master" alt="direct_dns_master"/>
+</div>
+
+Verify that the slave server can resolve type A records
+<div align="center">
+    <img src="images/checks/direct_dns_slave" alt="direct_dns_slave"/>
+</div>
+
+Verify that the master server can reverse resolve its IP addresses
+<div align="center">
+    <img src="images/checks/reverse_dns_master" alt="reverse_dns_master"/>
+</div>
+
+Verify that the slave server can reverse resolve its IP addresses
+<div align="center">
+    <img src="images/checks/reverse_dns_slave" alt="reverse_dns_slave"/>
+</div>
+
+Verify that the master server can resolve the aliases ns1.sistema.test and ns2 sistema.test
+<div align="center">
+    <img src="images/checks/alias_dns_master" alt="alias_dns_master"/>
+</div>
+
+Verify that the slave server can resolve the aliases ns1.sistema.test and ns2 sistema.test
+<div align="center">
+    <img src="images/checks/alias_dns_slave" alt="alias_dns_slave"/>
+</div>
+
+Check that the master server shows tierra.sistema.test and venus.sistema.test on the NS servers of sistema.test
+<div align="center">
+    <img src="images/checks/NS_dns_master" alt="NS_dns_master"/>
+</div>
+
+Check that the slave server shows tierra.sistema.test and venus.sistema.test on the NS servers of sistema.test
+<div align="center">
+    <img src="images/checks/NS_dns_slave" alt="NS_dns_slave"/>
+</div>
+
+Check that the master server shows the marte server as the MX server of sistema.test.
+<div align="center">
+    <img src="images/checks/MX_dns_master" alt="MX_dns_master"/>
+</div>
+
+Check that the slave server shows the marte server as the MX server of sistema.test.
+<div align="center">
+    <img src="images/checks/MX_dns_slave" alt="MX_dns_slave"/>
+</div>
+
+Check that the zone transfer has been carried out between the master and slave DNS servers from the logs on the master machine
+<div align="center">
+    <img src="images/checks/log_AXFR_dns_master" alt="log_AXFR_dns_master"/>
+</div>
+
+Verify that the zone transfer between the master and slave DNS servers has been performed with dig on the slave machine
+<div align="center">
+    <img src="images/checks/AXFR_dns_slave" alt="AXFR_dns_slave"/>
+</div>
+
+Running test.sh to the master machine
+<div align="center">
+    <img src="images/checks/test_dns_master" alt="test_dns_master"/>
+</div>
+
+Running test.sh to the slave machine
+<div align="center">
+    <img src="images/checks/test_dns_slave" alt="test_dns_slave"/>
+</div>
+
+
+
 ## :wrench: Setup 
 
 
