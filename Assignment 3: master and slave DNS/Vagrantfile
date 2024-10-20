@@ -31,7 +31,7 @@ Vagrant.configure("2") do |config|
     s.vm.hostname = "venus"
     s.vm.network "private_network", ip: "192.168.57.102"
     s.vm.provision "shell", inline: <<-SHELL
-      "cp -v /vagrant/files/slave/named.conf.local /etc/bind/"
+      cp -v /vagrant/files/slave/named.conf.local /etc/bind/
       systemctl restart named
     SHELL
   end
