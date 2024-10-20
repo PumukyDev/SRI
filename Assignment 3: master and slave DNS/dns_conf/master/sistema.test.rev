@@ -1,5 +1,5 @@
 ;
-;
+; Reverse zone configuration for 57.168.192.in-addr.arpa
 ;
 
 $TTL	86400
@@ -10,11 +10,15 @@ $ORIGIN 57.168.192.in-addr.arpa.
             604800		; Refresh
             86400		; Retry
             2419200		; Expire
-            7200 )	    ; Negative Cache TTL
-;
+            7200        ; Negative Cache TTL
+)
+
+; Name servers
 @               IN      NS      tierra.sistema.test.
 @               IN      NS      venus.sistema.test.
-103     IN      PTR     tierra.sistema.test.
-102     IN      PTR     venus.sistema.test.
-104     IN      PTR     marte.sistema.test.
+
+; PTR records (reverse lookups)
 101     IN      PTR     mercurio.sistema.test.
+102     IN      PTR     venus.sistema.test.
+103     IN      PTR     tierra.sistema.test.
+104     IN      PTR     marte.sistema.test.
