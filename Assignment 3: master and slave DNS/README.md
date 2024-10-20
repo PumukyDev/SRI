@@ -146,113 +146,113 @@ Configuration Files:
 
 >The negative response cache time is set to 2 hours.
 
-  ```
-  ;
-  ; Zone configuration for sistema.test
-  ;
+    ```
+    ;
+    ; Zone configuration for sistema.test
+    ;
 
-  $TTL	86400
-  $ORIGIN sistema.test.
+    $TTL	86400
+    $ORIGIN sistema.test.
 
-  @	IN	SOA	tierra.sistema.test. root.sistema.test. (
-              2024101902	; Serial
-              604800		; Refresh
-              86400		; Retry
-              2419200		; Expire
-              7200        ; Negative Cache TTL
-  )
+    @	IN	SOA	tierra.sistema.test. root.sistema.test. (
+                2024101902	; Serial
+                604800		; Refresh
+                86400		; Retry
+                2419200		; Expire
+                7200        ; Negative Cache TTL
+    )
 
-  ; Name servers
-  @               IN      NS      tierra
-  @               IN      NS      venus
+    ; Name servers
+    @               IN      NS      tierra
+    @               IN      NS      venus
 
-  ; A records (IP addresses)
-  mercurio        IN      A       192.168.57.101
-  venus           IN      A       192.168.57.102
-  tierra          IN      A       192.168.57.103
-  marte           IN      A       192.168.57.104
+    ; A records (IP addresses)
+    mercurio        IN      A       192.168.57.101
+    venus           IN      A       192.168.57.102
+    tierra          IN      A       192.168.57.103
+    marte           IN      A       192.168.57.104
 
-  ; CNAME records (aliases)
-  ns1             IN      CNAME   tierra
-  ns2             IN      CNAME   venus
-  mail            IN      CNAME   marte
+    ; CNAME records (aliases)
+    ns1             IN      CNAME   tierra
+    ns2             IN      CNAME   venus
+    mail            IN      CNAME   marte
 
-  ; MX record (mail exchange)
-  @               IN      MX      10 marte
-  ```
+    ; MX record (mail exchange)
+    @               IN      MX      10 marte
+    ```
 
 
 - **sistema.test.rev:** This is the reverse zone file that maps IP addresses to hostnames. 
 
 >The negative response cache time is also set to 2 hours.
 
-  ```
-  ;
-  ; Reverse zone configuration for 57.168.192.in-addr.arpa
-  ;
+    ```
+    ;
+    ; Reverse zone configuration for 57.168.192.in-addr.arpa
+    ;
 
-  $TTL	86400
-  $ORIGIN 57.168.192.in-addr.arpa.
+    $TTL	86400
+    $ORIGIN 57.168.192.in-addr.arpa.
 
-  @	IN	SOA	tierra.sistema.test. root.sistema.test. (
-              2024101902	; Serial
-              604800		; Refresh
-              86400		; Retry
-              2419200		; Expire
-              7200        ; Negative Cache TTL
-  )
+    @	IN	SOA	tierra.sistema.test. root.sistema.test. (
+                2024101902	; Serial
+                604800		; Refresh
+                86400		; Retry
+                2419200		; Expire
+                7200        ; Negative Cache TTL
+    )
 
-  ; Name servers
-  @               IN      NS      tierra.sistema.test.
-  @               IN      NS      venus.sistema.test.
+    ; Name servers
+    @               IN      NS      tierra.sistema.test.
+    @               IN      NS      venus.sistema.test.
 
-  ; PTR records (reverse lookups)
-  101     IN      PTR     mercurio.sistema.test.
-  102     IN      PTR     venus.sistema.test.
-  103     IN      PTR     tierra.sistema.test.
-  104     IN      PTR     marte.sistema.test.
-  ```
+    ; PTR records (reverse lookups)
+    101     IN      PTR     mercurio.sistema.test.
+    102     IN      PTR     venus.sistema.test.
+    103     IN      PTR     tierra.sistema.test.
+    104     IN      PTR     marte.sistema.test.
+    ```
 
 ## :gear: Vagrant Configuration
 
 In the Vagrant configuration file (Vagrantfile), we'll add the following lines to avoid potential issues and reduce the startup time for the virtual machines:
 
-  ```
-  config.vm.box_check_update = false
-  config.vbguest.auto_update = false
-  config.ssh.insert_key = false
-  ```
+    ```
+    config.vm.box_check_update = false
+    config.vbguest.auto_update = false
+    config.ssh.insert_key = false
+    ```
 
 We will install Debian Bookworm (64-bit) on all machines and include provisioning steps to configure BIND using the configuration files we wrote earlier:
 
-  ```
-  config.vm.box = "debian/bookworm64"
-  config.vm.provision "shell", inline: <<-SHELL
-      apt-get update -y
-      apt-get upgrade -y
-      apt-get install -y bind9 bind9utils bind9-doc
-      cp -v /vagrant/dns_conf/named /etc/default/
-      cp -v /vagrant/dns_conf/named.conf.options /etc/bind/
-    SHELL
-  ```
+    ```
+    config.vm.box = "debian/bookworm64"
+    config.vm.provision "shell", inline: <<-SHELL
+        apt-get update -y
+        apt-get upgrade -y
+        apt-get install -y bind9 bind9utils bind9-doc
+        cp -v /vagrant/dns_conf/named /etc/default/
+        cp -v /vagrant/dns_conf/named.conf.options /etc/bind/
+      SHELL
+    ```
 
 **Master Server:**
 
 To define the master server, we’ll use the following configuration:
 
-  ```
-  config.vm.define "master" do |m|
-      m.vm.hostname = "tierra"
-      m.vm.network "private_network", ip: "192.168.57.103"
-      m.vm.provision "shell", inline: <<-SHELL
-        cp -v /vagrant/dns_conf/master/named.conf.local /etc/bind/
-        cp -v /vagrant/dns_conf/master/sistema.test.dns /var/lib/bind/
-        cp -v /vagrant/dns_conf/master/sistema.test.rev /var/lib/bind/
-        chown bind:bind /var/lib/bind/*
-        systemctl restart named
-      SHELL
-  end
-  ```
+    ```
+    config.vm.define "master" do |m|
+        m.vm.hostname = "tierra"
+        m.vm.network "private_network", ip: "192.168.57.103"
+        m.vm.provision "shell", inline: <<-SHELL
+          cp -v /vagrant/dns_conf/master/named.conf.local /etc/bind/
+          cp -v /vagrant/dns_conf/master/sistema.test.dns /var/lib/bind/
+          cp -v /vagrant/dns_conf/master/sistema.test.rev /var/lib/bind/
+          chown bind:bind /var/lib/bind/*
+          systemctl restart named
+        SHELL
+    end
+    ```
 
 This sets up the master DNS server with the necessary files (named.conf.local, sistema.test.dns, and sistema.test.rev), assigns the correct permissions, and restarts the named service.
 
@@ -280,72 +280,72 @@ This ensures that the slave server (venus) is properly configured with its respe
 
 Verify that the master server can resolve type A records
 <div align="center">
-    <img src="images/checks/direct_dns_master" alt="direct_dns_master"/>
+    <img src="images/checks/direct_dns_master.png" alt="direct_dns_master"/>
 </div>
 
 Verify that the slave server can resolve type A records
 <div align="center">
-    <img src="images/checks/direct_dns_slave" alt="direct_dns_slave"/>
+    <img src="images/checks/direct_dns_slave.png" alt="direct_dns_slave"/>
 </div>
 
 Verify that the master server can reverse resolve its IP addresses
 <div align="center">
-    <img src="images/checks/reverse_dns_master" alt="reverse_dns_master"/>
+    <img src="images/checks/reverse_dns_master.png" alt="reverse_dns_master"/>
 </div>
 
 Verify that the slave server can reverse resolve its IP addresses
 <div align="center">
-    <img src="images/checks/reverse_dns_slave" alt="reverse_dns_slave"/>
+    <img src="images/checks/reverse_dns_slave.png" alt="reverse_dns_slave"/>
 </div>
 
 Verify that the master server can resolve the aliases ns1.sistema.test and ns2 sistema.test
 <div align="center">
-    <img src="images/checks/alias_dns_master" alt="alias_dns_master"/>
+    <img src="images/checks/alias_dns_master.png" alt="alias_dns_master"/>
 </div>
 
 Verify that the slave server can resolve the aliases ns1.sistema.test and ns2 sistema.test
 <div align="center">
-    <img src="images/checks/alias_dns_slave" alt="alias_dns_slave"/>
+    <img src="images/checks/alias_dns_slave.png" alt="alias_dns_slave"/>
 </div>
 
 Check that the master server shows tierra.sistema.test and venus.sistema.test on the NS servers of sistema.test
 <div align="center">
-    <img src="images/checks/NS_dns_master" alt="NS_dns_master"/>
+    <img src="images/checks/NS_dns_master.png" alt="NS_dns_master"/>
 </div>
 
 Check that the slave server shows tierra.sistema.test and venus.sistema.test on the NS servers of sistema.test
 <div align="center">
-    <img src="images/checks/NS_dns_slave" alt="NS_dns_slave"/>
+    <img src="images/checks/NS_dns_slave.png" alt="NS_dns_slave"/>
 </div>
 
 Check that the master server shows the marte server as the MX server of sistema.test.
 <div align="center">
-    <img src="images/checks/MX_dns_master" alt="MX_dns_master"/>
+    <img src="images/checks/MX_dns_master.png" alt="MX_dns_master"/>
 </div>
 
 Check that the slave server shows the marte server as the MX server of sistema.test.
 <div align="center">
-    <img src="images/checks/MX_dns_slave" alt="MX_dns_slave"/>
+    <img src="images/checks/MX_dns_slave.png" alt="MX_dns_slave"/>
 </div>
 
 Check that the zone transfer has been carried out between the master and slave DNS servers from the logs on the master machine
 <div align="center">
-    <img src="images/checks/log_AXFR_dns_master" alt="log_AXFR_dns_master"/>
+    <img src="images/checks/log_AXFR_dns_master.png" alt="log_AXFR_dns_master"/>
 </div>
 
 Verify that the zone transfer between the master and slave DNS servers has been performed with dig on the slave machine
 <div align="center">
-    <img src="images/checks/AXFR_dns_slave" alt="AXFR_dns_slave"/>
+    <img src="images/checks/AXFR_dns_slave.png" alt="AXFR_dns_slave"/>
 </div>
 
 Running test.sh to the master machine
 <div align="center">
-    <img src="images/checks/test_dns_master" alt="test_dns_master"/>
+    <img src="images/checks/test_dns_master.png" alt="test_dns_master"/>
 </div>
 
 Running test.sh to the slave machine
 <div align="center">
-    <img src="images/checks/test_dns_slave" alt="test_dns_slave"/>
+    <img src="images/checks/test_dns_slave.png" alt="test_dns_slave"/>
 </div>
 
 
