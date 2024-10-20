@@ -10,27 +10,26 @@ In this exercise, we will create a virtual network using Vagrant that includes a
 
 |      Machine      | Fully Qualified Domain Name (FQDN) |     IP     |
 |       :---:       |                :---:               |   :---:    |
-|-------------------|------------------------------------|------------|
 |  Imaginary Linux  |        mercurio.sistema.test       |   .101     |
 |      Debian1      |          venus.sistema.test        |   .102     |
 |      Debian2      |         tierra.sistema.test        |   .103     |
 | Imaginary Windows |          marte.sistema.test        |   .104     |
 
-### Master Server (Tierra):
+**Master Server (Tierra):**
 Acts as the authoritative DNS server for the domain, holding the main zone files. Configured to propagate updates via zone transfers to the slave server and is the primary point for DNS query resolution.
 
-### Slave Server (Venus):
+**Slave Server (Venus):**
 Works as a secondary DNS server, receiving data through zone transfers from the master server. It ensures DNS service continuity by responding to queries when the master server is unavailable.
 
-### Mail Server (Marte):
+**Mail Server (Marte):**
 Handles mail delivery within the domain, configured as the primary MX (Mail Exchange) record in the DNS configuration. It manages mail flow and ensures proper email routing for system.test.
 
-### Additional Server (Mercurio):
+**Additional Server (Mercurio):**
 This server is part of the network to simulate additional host resolution. It’s listed as an A record in the DNS setup and is used for testing and verifying DNS resolution across the network.
 
 ## :gear: DNS Configuration
 
-The zone file definitions and BIND configurations are managed through files located in /etc/bind/ for the main settings and in /var/lib/bind/ for the zone data files.
+The zone file definitions and BIND configurations are managed through files located in `/etc/bind/` for the main settings and in `/var/lib/bind/` for the zone data files.
 
 Configuration Files:
 
@@ -53,7 +52,7 @@ Configuration Files:
   dnssec-validation yes;
   ```
 
-  - Created ACL groups so that the servers allow recursive queries only from machines in the 127.0.0.0/8 and 192.168.57.0/24 networks.
+  - Created ACL groups so that the servers allow recursive queries only from machines in the `127.0.0.0/8` and `192.168.57.0/24` networks.
 
   ```
     acl "localnet" {
@@ -77,7 +76,7 @@ Configuration Files:
   }
   ```
 
-  - Configured the server to forward queries it’s not authoritative for to the DNS server 208.67.222.222 (OpenDNS).
+  - Configured the server to forward queries it’s not authoritative for to the DNS server `208.67.222.222` (OpenDNS).
 
   ```
   forwarders {
@@ -143,7 +142,9 @@ Configuration Files:
   ```
 
 
-- **sistema.test.dns:** This is the forward zone file, containing IP addresses, aliases, and the mail server. The negative response cache time is set to 2 hours.
+- **sistema.test.dns:** This is the forward zone file, containing IP addresses, aliases, and the mail server. 
+
+>The negative response cache time is set to 2 hours.
 
   ```
   ;
@@ -181,7 +182,9 @@ Configuration Files:
   ```
 
 
-- **sistema.test.rev:** This is the reverse zone file that maps IP addresses to hostnames. The negative response cache time is also set to 2 hours.
+- **sistema.test.rev:** This is the reverse zone file that maps IP addresses to hostnames. 
+
+>The negative response cache time is also set to 2 hours.
 
   ```
   ;
@@ -233,7 +236,7 @@ We will install Debian Bookworm (64-bit) on all machines and include provisionin
     SHELL
   ```
 
-Master Server:
+**Master Server:**
 
 To define the master server, we’ll use the following configuration:
 
@@ -252,7 +255,11 @@ To define the master server, we’ll use the following configuration:
   ```
 
 This sets up the master DNS server with the necessary files (named.conf.local, sistema.test.dns, and sistema.test.rev), assigns the correct permissions, and restarts the named service.
-Slave Server:
+
+> [!WARNING]
+> Files inside `/var/lib/bind/ have to belong to bind group to work properly.
+
+**Slave Server:**
 
 For the slave server configuration, we'll use the following setup:
 
