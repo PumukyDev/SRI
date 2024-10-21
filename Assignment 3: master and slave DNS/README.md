@@ -144,7 +144,7 @@ Configuration Files:
 
 - **sistema.test.dns:** This is the forward zone file, containing IP addresses, aliases, and the mail server. 
 
->The negative response cache time is set to 2 hours.
+    >The negative response cache time is set to 2 hours.
 
     ```
     ;
@@ -155,11 +155,11 @@ Configuration Files:
     $ORIGIN sistema.test.
 
     @	IN	SOA	tierra.sistema.test. root.sistema.test. (
-                2024101902	; Serial
-                604800		; Refresh
-                86400		; Retry
-                2419200		; Expire
-                7200        ; Negative Cache TTL
+            2024101902	; Serial
+            604800		; Refresh
+            86400		; Retry
+            2419200		; Expire
+            7200        ; Negative Cache TTL
     )
 
     ; Name servers
@@ -184,7 +184,7 @@ Configuration Files:
 
 - **sistema.test.rev:** This is the reverse zone file that maps IP addresses to hostnames. 
 
->The negative response cache time is also set to 2 hours.
+    >The negative response cache time is also set to 2 hours.
 
     ```
     ;
@@ -195,11 +195,11 @@ Configuration Files:
     $ORIGIN 57.168.192.in-addr.arpa.
 
     @	IN	SOA	tierra.sistema.test. root.sistema.test. (
-                2024101902	; Serial
-                604800		; Refresh
-                86400		; Retry
-                2419200		; Expire
-                7200        ; Negative Cache TTL
+            2024101902	; Serial
+            604800		; Refresh
+            86400		; Retry
+            2419200		; Expire
+            7200        ; Negative Cache TTL
     )
 
     ; Name servers
