@@ -217,42 +217,42 @@ Configuration Files:
 
 In the Vagrant configuration file (Vagrantfile), we'll add the following lines to avoid potential issues and reduce the startup time for the virtual machines:
 
-```
-config.vm.box_check_update = false
-config.vbguest.auto_update = false
-config.ssh.insert_key = false
-```
+    
+    config.vm.box_check_update = false
+    config.vbguest.auto_update = false
+    config.ssh.insert_key = false
+    
 
 We will install Debian Bookworm (64-bit) on all machines and include provisioning steps to configure BIND using the configuration files we wrote earlier:
 
-```
-config.vm.box = "debian/bookworm64"
-config.vm.provision "shell", inline: <<-SHELL
-    apt-get update -y
-    apt-get upgrade -y
-    apt-get install -y bind9 bind9utils bind9-doc
-    cp -v /vagrant/dns_conf/named /etc/default/
-    cp -v /vagrant/dns_conf/named.conf.options /etc/bind/
-    SHELL
-```
+
+    config.vm.box = "debian/bookworm64"
+    config.vm.provision "shell", inline: <<-SHELL
+        apt-get update -y
+        apt-get upgrade -y
+        apt-get install -y bind9 bind9utils bind9-doc
+        cp -v /vagrant/dns_conf/named /etc/default/
+        cp -v /vagrant/dns_conf/named.conf.options /etc/bind/
+        SHELL
+
 
 **Master Server:**
 
 To define the master server, we’ll use the following configuration:
 
-```
-config.vm.define "master" do |m|
-    m.vm.hostname = "tierra"
-    m.vm.network "private_network", ip: "192.168.57.103"
-    m.vm.provision "shell", inline: <<-SHELL
-        cp -v /vagrant/dns_conf/master/named.conf.local /etc/bind/
-        cp -v /vagrant/dns_conf/master/sistema.test.dns /var/lib/bind/
-        cp -v /vagrant/dns_conf/master/sistema.test.rev /var/lib/bind/
-        chown bind:bind /var/lib/bind/*
-        systemctl restart named
-    SHELL
-end
-```
+
+    config.vm.define "master" do |m|
+        m.vm.hostname = "tierra"
+        m.vm.network "private_network", ip: "192.168.57.103"
+        m.vm.provision "shell", inline: <<-SHELL
+            cp -v /vagrant/dns_conf/master/named.conf.local /etc/bind/
+            cp -v /vagrant/dns_conf/master/sistema.test.dns /var/lib/bind/
+            cp -v /vagrant/dns_conf/master/sistema.test.rev /var/lib/bind/
+            chown bind:bind /var/lib/bind/*
+            systemctl restart named
+        SHELL
+    end
+
 
 This sets up the master DNS server with the necessary files (named.conf.local, sistema.test.dns, and sistema.test.rev), assigns the correct permissions, and restarts the named service.
 
@@ -263,16 +263,16 @@ This sets up the master DNS server with the necessary files (named.conf.local, s
 
 For the slave server configuration, we'll use the following setup:
 
-```
-config.vm.define "slave" do |s|
-    s.vm.hostname = "venus"
-    s.vm.network "private_network", ip: "192.168.57.102"
-    s.vm.provision "shell", inline: <<-SHELL
-    cp -v /vagrant/dns_conf/slave/named.conf.local /etc/bind/
-    systemctl restart named
-    SHELL
-end
-```
+
+    config.vm.define "slave" do |s|
+        s.vm.hostname = "venus"
+        s.vm.network "private_network", ip: "192.168.57.102"
+        s.vm.provision "shell", inline: <<-SHELL
+        cp -v /vagrant/dns_conf/slave/named.conf.local /etc/bind/
+        systemctl restart named
+        SHELL
+    end
+
 
 This ensures that the slave server (venus) is properly configured with its respective named.conf.local file and that the named service is restarted.
 
