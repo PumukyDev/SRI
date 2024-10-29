@@ -1,0 +1,20 @@
+- name: Configurar servidor web
+  hosts: web
+  become: True
+  tasks:
+  - name: Instalar nginx
+    package: name=nginx update_cache=yes cache_valid_time=3600
+
+  - name: Copiar configuración de Nginx
+    copy:
+      src: nginx.conf
+      dest: /etc/nginx/sites-available/default
+
+  - name: Habilitar sitio web
+    file: > 
+      dest=/etc/nginx/sites-enabled/default
+      src=/etc/nginx/sites-available/default
+      state=link
+  
+  - name: Reiniciar Nginx
+    service: name=nginx state=restarted

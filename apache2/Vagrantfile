@@ -1,0 +1,19 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/bookworm64"
+  config.vm.hostname = "www.192.168.57.10.nip.io"
+  #config.vm.network "public_network", bridge: "eth0"#, ip: "10.112.108.6" #Para sacar la ip antes nos metemos en la máquina y hacemos un ip a. Cogemos esa ip porque así no se la pisamos a nadie y no tenemos problemas
+  config.vm.network "private_network", ip: "192.168.57.10"
+  config.vm.synced_folder "htdocs", "/var/www/192.168.57.10.nip.io/html"
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get update -y
+    #apt-get upgrade -y
+    apt-get install -y apache2
+    cp -v /vagrant/apache2.conf /etc/apache2
+    cp -v /vagrant/www.192.168.57.10.nip.io.conf /etc/apache2/sites-available
+    a2ensite www.192.168.57.10.nip.io.conf
+    systemctl reload apache2
+  SHELL
+end
