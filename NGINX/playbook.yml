@@ -1,5 +1,5 @@
 - name: Configurar servidor web
-  hosts: web
+  hosts: webservers
   become: True
   tasks:
   - name: Instalar nginx
@@ -15,6 +15,11 @@
       dest=/etc/nginx/sites-enabled/default
       src=/etc/nginx/sites-available/default
       state=link
+
+  - name: Copiar index.html
+    template: >
+      src=index.html.j2
+      dest=/var/www/html/index.html
   
   - name: Reiniciar Nginx
     service: name=nginx state=restarted

@@ -1,0 +1,39 @@
+- name: Configurar servidor web con TLS
+  hosts: webservers
+  become: True
+  vars:
+    key_file: /etc/nginx/ssl/nginx.key
+    cert_file: /etc/nginx/ssl/nginx.crt
+    conf_file: /etc/nginx/sites-available/default
+    server_name: localhost
+  tasks:
+  - name: Instalar nginx
+    package: name=nginx update_cache=yes cache_valid_time=3600
+
+  - name: Crear directorios para certificados
+    file: path=/etc/nginx/ssl state=directory
+
+  - name: Copiar los certificados
+    copy: src=files/nginx.crt dest={{ cert_file }}
+
+  - name: Copiar la clave privada
+    copy: src=files/nginx.key dest={{ key_file }}
+
+  - name: Copiar configuración de Nginx
+    template: >
+      src=nginx.conf.j2
+      dest={{ conf_file }}
+
+  - name: Habilitar sitio web
+    file: > 
+      dest=/etc/nginx/sites-enabled/default
+      src={{ conf_file }}
+      state=link
+
+  - name: Copiar index.html
+    template: >
+      src=index.html.j2
+      dest=/var/www/html/index.html
+  
+  - name: Reiniciar Nginx
+    service: name=nginx state=restarted

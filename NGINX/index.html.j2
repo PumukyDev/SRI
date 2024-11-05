@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a Ansible</title>
+</head>
+<body>
+    <h1>Bienvenido a Ansible</h1>
+    <p>
+        Si estás viendo esto es que has configurado
+        Nginx con Ansible correctamente
+    </p>
+    <h3>Ejecutándose en {{ inventory_hostname }}</h3>
+    <p>{{ ansible_managed }}</p>
+</body>
+</html>
